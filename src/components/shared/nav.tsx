@@ -1,7 +1,8 @@
+"use client";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { LogOut } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 const User = {
   firstName: "John",
   lastName: "Doe",
@@ -10,6 +11,7 @@ const User = {
 };
 
 const Nav = () => {
+  const router = useRouter();
   return (
     <nav className="flex items-center justify-between p-4 border-b border-gray-200">
       <Link href="/">
@@ -18,7 +20,10 @@ const Nav = () => {
 
       {User ? (
         <div className="flex items-center gap-4">
-          <Avatar>
+          <Avatar
+            onClick={() => router.push("/profile/1")}
+            className="cursor-pointer"
+          >
             <AvatarImage src={User.image} />
             <AvatarFallback>
               {User.firstName.charAt(0)}
