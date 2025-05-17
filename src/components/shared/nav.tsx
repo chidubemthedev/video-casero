@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { LogOut } from "lucide-react";
 
 const User = {
   firstName: "John",
@@ -16,13 +17,16 @@ const Nav = () => {
       </Link>
 
       {User ? (
-        <Avatar>
-          <AvatarImage src={User.image} />
-          <AvatarFallback>
-            {User.firstName.charAt(0)}
-            {User.lastName.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex items-center gap-4">
+          <Avatar>
+            <AvatarImage src={User.image} />
+            <AvatarFallback>
+              {User.firstName.charAt(0)}
+              {User.lastName.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <LogOut className="cursor-pointer" />
+        </div>
       ) : (
         <div className="flex items-center gap-4">
           <Link href="/login">Login</Link>
