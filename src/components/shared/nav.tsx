@@ -13,7 +13,7 @@ const User = {
 const Nav = () => {
   const router = useRouter();
   return (
-    <nav className="flex items-center justify-between p-4 border-b border-gray-200">
+    <nav className="flex items-center justify-between py-4 px-8 border-b border-gray-200">
       <Link href="/">
         <h1 className="text-2xl font-bold">Video Casero</h1>
       </Link>

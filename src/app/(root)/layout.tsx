@@ -8,7 +8,9 @@ export default function AppLayout({
   return (
     <main className="flex flex-col h-screen">
       <Nav />
-      <section className="flex flex-col p-4">{children}</section>
+      <section className="flex flex-col py-8 max-w-7xl mx-auto w-full">
+        {children}
+      </section>
     </main>
   );
 }
