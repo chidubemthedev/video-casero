@@ -14,10 +14,20 @@ const Header = ({ title, subHeader, image }: Props) => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <div className="flex flex-col">
-          {image && <Image src={image} alt={title} width={66} height={66} />}
-          <p className="text-sm text-gray-500">{subHeader}</p>
-          <h1 className="text-2xl font-bold">{title}</h1>
+        <div className="flex items-center gap-2">
+          {image && (
+            <Image
+              src={image}
+              alt={title}
+              width={66}
+              height={66}
+              className="rounded-full"
+            />
+          )}
+          <div>
+            <p className="text-sm text-gray-500">{subHeader}</p>
+            <h1 className="text-2xl font-bold">{title}</h1>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
