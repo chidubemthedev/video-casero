@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Upload, Video, Search } from "lucide-react";
 import { Input } from "../ui/input";
-
+import DropdownList from "./dropdown-list";
 type Props = {
   title: string;
   subHeader: string;
@@ -56,7 +56,7 @@ const Header = ({ title, subHeader, image }: Props) => {
           </Button>
         </div>
 
-        <h1 className="text-sm text-gray-500">dropdown</h1>
+        <DropdownList />
       </div>
     </>
   );
