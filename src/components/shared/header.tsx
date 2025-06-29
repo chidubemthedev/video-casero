@@ -13,7 +13,7 @@ type Props = {
 const Header = ({ title, subHeader, image }: Props) => {
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row gap-2 items-center justify-between">
         <div className="flex items-center gap-2">
           {image && (
             <Image
@@ -43,7 +43,7 @@ const Header = ({ title, subHeader, image }: Props) => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex flex-col md:flex-row gap-2 items-center justify-between mt-4">
         <div className="relative flex items-center gap-2 w-full max-w-md">
           <Input
             type="text"
