@@ -36,7 +36,7 @@ const VideoCard = ({
   duration,
 }: Props) => {
   return (
-    <Link href={`/profile/${id}`}>
+    <Link href={`/video/${id}`}>
       <Card className="pt-0">
         <CardHeader className="relative px-0">
           <div className="rounded-2xl overflow-hidden">
