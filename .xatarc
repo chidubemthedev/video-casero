@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Chidubem-Agulue-s-workspace-ccmc5l.eu-west-1.xata.sh/db/video_casero",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
