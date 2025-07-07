@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { authClient } from "@/lib/auth-client";
 
 const testimonials = [
   {
@@ -41,6 +42,10 @@ const Page = () => {
     setCurrentTestimonial(
       (prev) => (prev - 1 + testimonials.length) % testimonials.length
     );
+  };
+
+  const handleSignIn = async () => {
+    return await authClient.signIn.social({ provider: "google" });
   };
 
   return (
@@ -137,6 +142,7 @@ const Page = () => {
 
           <div className="space-y-6">
             <Button
+              onClick={handleSignIn}
               className="w-full h-12 text-base font-medium bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors"
               variant="outline"
             >
