@@ -1,6 +1,7 @@
 "use client";
 import FileInput from "@/components/file-input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -54,7 +55,7 @@ const UploadPage = () => {
       <h1 className="text-2xl font-bold">Upload a video</h1>
       {error && <p className="text-red-500">{error}</p>}
 
-      <Card className="border-0 shadow-none">
+      <Card className="border-0 shadow-none max-w-2xl mx-auto">
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
@@ -85,8 +86,10 @@ const UploadPage = () => {
             <FileInput
               id="video"
               name="video"
-              type="video"
-              value={formData.video}
+              accept="video/*"
+              type="file"
+              value={"file"}
+              item={formData.video}
               onChange={handleChange}
             />
           </div>
@@ -96,8 +99,10 @@ const UploadPage = () => {
             <FileInput
               id="thumbnail"
               name="thumbnail"
-              type="image"
-              value={formData.thumbnail}
+              type="file"
+              accept="image/*"
+              value={"file"}
+              item={formData.thumbnail}
               onChange={handleChange}
             />
           </div>
@@ -118,6 +123,9 @@ const UploadPage = () => {
             </Select>
           </div>
         </CardContent>
+        <CardFooter>
+          <Button>Submit</Button>
+        </CardFooter>
       </Card>
     </div>
   );

@@ -7,35 +7,49 @@ import { Button } from "./ui/button";
 type Props = {
   id: string;
   name: string;
-  type: "image" | "video";
+  accept: string;
   value: string;
+  item: string;
+  type: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const FileInput = ({ id, name, type, value, onChange }: Props) => {
+const FileInput = ({
+  id,
+  name,
+  accept,
+  value,
+  item,
+  type = "file",
+  onChange,
+}: Props) => {
   return (
     <label className="cursor-pointer">
-      {!value ? (
+      {!item ? (
         <div className="flex flex-col border rounded-2xl p-4 py-10 items-center justify-center gap-2">
           <UploadCloud />
           <p>Click to upload your {name}</p>
           <Input
             id={id}
             name={name}
+            accept={accept}
             type={type}
-            //   value={value}
             className="hidden"
             onChange={onChange}
           />
         </div>
-      ) : type === "video" ? (
-        <video src={value} controls></video>
       ) : (
-        <Image src={value} alt={name} width={200} height={200} />
+        <div>
+          {type === "video" ? (
+            <video src={value} controls></video>
+          ) : (
+            <Image src={"/file.svg"} alt={name} width={200} height={200} />
+          )}
+          <Button size={"icon"}>
+            <X />
+          </Button>
+        </div>
       )}
-      <Button size={"icon"}>
-        <X />
-      </Button>
     </label>
   );
 };
