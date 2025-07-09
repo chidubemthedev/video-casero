@@ -1,6 +1,5 @@
 "use client";
 import FileInput from "@/components/file-input";
-import FormField from "@/components/form-field";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,8 +17,8 @@ const UploadPage = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    video: null,
-    thumbnail: null,
+    video: "",
+    thumbnail: "",
     visibility: "public",
   });
 
@@ -83,10 +82,22 @@ const UploadPage = () => {
 
           <div className="space-y-2">
             <Label htmlFor="video">Video</Label>
-            <Input
+            <FileInput
               id="video"
               name="video"
-              type="file"
+              type="video"
+              value={formData.video}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="thumbnail">Thumbnail</Label>
+            <FileInput
+              id="thumbnail"
+              name="thumbnail"
+              type="image"
+              value={formData.thumbnail}
               onChange={handleChange}
             />
           </div>
