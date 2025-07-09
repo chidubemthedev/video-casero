@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Upload, Video, Search } from "lucide-react";
 import { Input } from "../ui/input";
 import DropdownList from "./dropdown-list";
+import Link from "next/link";
 type Props = {
   title: string;
   subHeader: string;
@@ -31,9 +32,11 @@ const Header = ({ title, subHeader, image }: Props) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <Upload />
-            Upload Video
+          <Button asChild variant="outline">
+            <Link href={"/upload"}>
+              <Upload />
+              Upload Video
+            </Link>
           </Button>
 
           <Button>
