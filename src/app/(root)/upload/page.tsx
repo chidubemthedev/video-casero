@@ -19,24 +19,63 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useFileInput } from "@/lib/hooks/useFileInput";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MAX_THUMBNAIL_SIZE, MAX_VIDEO_SIZE } from "../../../../constants";
 import { Loader } from "lucide-react";
+import {
+  getThumbnailUploadUrl,
+  getVideoUploadUrl,
+  saveVideoDetails,
+} from "@/lib/actions/video";
+import { useRouter } from "next/navigation";
+
+const uploadFileToBunny = (
+  file: File,
+  uploadUrl: string,
+  accessKey: string
+): Promise<void> => {
+  return fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": file.type,
+      AccessKey: accessKey,
+    },
+    body: file,
+  }).then((res) => {
+    if (!res.ok) {
+      throw new Error("Failed to upload file to bunny");
+    }
+  });
+};
 
 const UploadPage = () => {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    video: File | null;
+    thumbnail: File | null;
+    visibility: "public" | "private";
+  }>({
     title: "",
     description: "",
-    video: "",
-    thumbnail: "",
+    video: null,
+    thumbnail: null,
     visibility: "public",
   });
 
   const video = useFileInput(MAX_VIDEO_SIZE);
   const thumbnail = useFileInput(MAX_THUMBNAIL_SIZE);
 
-  const [error, setError] = useState("s");
+  const [error, setError] = useState("");
+  const [videoDuration, setVideoDuration] = useState<number | null>(0);
+
+  useEffect(() => {
+    if (video.duration !== null || 0) {
+      setVideoDuration(video.duration);
+    }
+  }, [video.duration]);
 
   const handleChange = (
     e:
@@ -56,7 +95,7 @@ const UploadPage = () => {
     }));
   };
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: "public" | "private") => {
     setFormData((prev) => ({
       ...prev,
       visibility: value,
@@ -77,10 +116,45 @@ const UploadPage = () => {
         return;
       }
 
+      // get upload url
+      const {
+        videoId,
+        uploadUrl: videoUploadUrl,
+        accessKey: videoAccessKey,
+      } = await getVideoUploadUrl();
+
+      if (!videoUploadUrl || !videoAccessKey)
+        throw new Error("Failed to get video upload credentails");
+
       // upload the video to bunny
-      // unload the thumbnail to db
-      // Attach thumbnail
+      await uploadFileToBunny(video.file, videoUploadUrl, videoAccessKey);
+
+      // upload the thumbnail to db
+      const {
+        uploadUrl: thumbnailUploadUrl,
+        accessKey: thumbnailAccessKey,
+        cdnUrl: thumbnailCdnUrl,
+      } = await getThumbnailUploadUrl(videoId);
+
+      if (!thumbnailUploadUrl || !thumbnailAccessKey || !thumbnailCdnUrl)
+        throw new Error("Failed to get thumbnail upload credentails");
+
+      // upload the thumbnail to bunny
+      await uploadFileToBunny(
+        thumbnail.file,
+        thumbnailUploadUrl,
+        thumbnailAccessKey
+      );
+
       // Create a new db entry for the video details (url, metadata)
+      await saveVideoDetails({
+        videoId,
+        thumbnailUrl: thumbnailCdnUrl,
+        ...formData,
+        duration: videoDuration,
+      });
+
+      router.push(`/video/${videoId}`);
     } catch (error) {
       console.log("Error submitting video", error);
     } finally {
@@ -127,8 +201,8 @@ const UploadPage = () => {
               name="video"
               accept="video/*"
               type="video"
-              previewUrl={formData.video}
-              onChange={handleChange}
+              previewUrl={video.previewUrl}
+              onChange={video.handleFileChange}
               onReset={video.resetFile}
             />
           </div>
@@ -140,8 +214,8 @@ const UploadPage = () => {
               name="thumbnail"
               type="image"
               accept="image/*"
-              previewUrl={formData.thumbnail}
-              onChange={handleChange}
+              previewUrl={thumbnail.previewUrl}
+              onChange={thumbnail.handleFileChange}
               onReset={thumbnail.resetFile}
             />
           </div>

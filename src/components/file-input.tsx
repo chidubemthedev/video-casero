@@ -8,7 +8,7 @@ type Props = {
   id: string;
   name: string;
   accept: string;
-  previewUrl: string;
+  previewUrl: string | null;
   type: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReset: () => void;
@@ -39,13 +39,23 @@ const FileInput = ({
           />
         </div>
       ) : (
-        <div>
+        <div className="relative">
           {type === "video" ? (
             <video src={previewUrl} controls></video>
           ) : (
-            <Image src={previewUrl} alt={name} width={200} height={200} />
+            <Image
+              src={previewUrl}
+              alt={name}
+              width={200}
+              height={200}
+              className="w-full h-auto"
+            />
           )}
-          <Button onClick={onReset} className="mt-2" size={"icon"}>
+          <Button
+            onClick={onReset}
+            className="mt-2 absolute top-2 right-2"
+            size={"icon"}
+          >
             <X />
           </Button>
         </div>
