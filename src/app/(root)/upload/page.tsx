@@ -1,7 +1,13 @@
 "use client";
 import FileInput from "@/components/file-input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,9 +18,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useFileInput } from "@/lib/hooks/useFileInput";
 import React, { useState } from "react";
+import { MAX_THUMBNAIL_SIZE, MAX_VIDEO_SIZE } from "../../../../constants";
+import { Loader } from "lucide-react";
 
 const UploadPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -23,7 +33,10 @@ const UploadPage = () => {
     visibility: "public",
   });
 
-  const [error, setError] = useState(false);
+  const video = useFileInput(MAX_VIDEO_SIZE);
+  const thumbnail = useFileInput(MAX_THUMBNAIL_SIZE);
+
+  const [error, setError] = useState("s");
 
   const handleChange = (
     e:
@@ -50,12 +63,38 @@ const UploadPage = () => {
     }));
   };
 
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+
+    try {
+      if (!video.file || !thumbnail.file) {
+        setError("Please upload both video and thumbnail");
+        return;
+      }
+
+      if (!formData.title || !formData.description) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // upload the video to bunny
+      // unload the thumbnail to db
+      // Attach thumbnail
+      // Create a new db entry for the video details (url, metadata)
+    } catch (error) {
+      console.log("Error submitting video", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div>
-      <h1 className="text-2xl font-bold">Upload a video</h1>
-      {error && <p className="text-red-500">{error}</p>}
-
       <Card className="border-0 shadow-none max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Upload Video</CardTitle>
+          {error && <p className="text-red-500">{error}</p>}
+        </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
@@ -87,10 +126,10 @@ const UploadPage = () => {
               id="video"
               name="video"
               accept="video/*"
-              type="file"
-              value={"file"}
-              item={formData.video}
+              type="video"
+              previewUrl={formData.video}
               onChange={handleChange}
+              onReset={video.resetFile}
             />
           </div>
 
@@ -99,11 +138,11 @@ const UploadPage = () => {
             <FileInput
               id="thumbnail"
               name="thumbnail"
-              type="file"
+              type="image"
               accept="image/*"
-              value={"file"}
-              item={formData.thumbnail}
+              previewUrl={formData.thumbnail}
               onChange={handleChange}
+              onReset={thumbnail.resetFile}
             />
           </div>
 
@@ -124,7 +163,13 @@ const UploadPage = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Submit</Button>
+          <Button onClick={handleSubmit} className="w-full" size={"lg"}>
+            {isSubmitting ? (
+              <Loader className="animate-spin w-4 h-4" />
+            ) : (
+              "Upload Video"
+            )}
+          </Button>
         </CardFooter>
       </Card>
     </div>

@@ -8,24 +8,24 @@ type Props = {
   id: string;
   name: string;
   accept: string;
-  value: string;
-  item: string;
+  previewUrl: string;
   type: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onReset: () => void;
 };
 
 const FileInput = ({
   id,
   name,
   accept,
-  value,
-  item,
-  type = "file",
+  previewUrl,
+  type,
   onChange,
+  onReset,
 }: Props) => {
   return (
     <label className="cursor-pointer">
-      {!item ? (
+      {!previewUrl ? (
         <div className="flex flex-col border rounded-2xl p-4 py-10 items-center justify-center gap-2">
           <UploadCloud />
           <p>Click to upload your {name}</p>
@@ -33,7 +33,7 @@ const FileInput = ({
             id={id}
             name={name}
             accept={accept}
-            type={type}
+            type={"file"}
             className="hidden"
             onChange={onChange}
           />
@@ -41,11 +41,11 @@ const FileInput = ({
       ) : (
         <div>
           {type === "video" ? (
-            <video src={value} controls></video>
+            <video src={previewUrl} controls></video>
           ) : (
-            <Image src={"/file.svg"} alt={name} width={200} height={200} />
+            <Image src={previewUrl} alt={name} width={200} height={200} />
           )}
-          <Button size={"icon"}>
+          <Button onClick={onReset} className="mt-2" size={"icon"}>
             <X />
           </Button>
         </div>
