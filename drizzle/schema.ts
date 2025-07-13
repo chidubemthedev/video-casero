@@ -7,7 +7,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-const user = pgTable("user", {
+export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
@@ -23,7 +23,7 @@ const user = pgTable("user", {
     .notNull(),
 });
 
-const session = pgTable("session", {
+export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
   token: text("token").notNull().unique(),
@@ -36,7 +36,7 @@ const session = pgTable("session", {
     .references(() => user.id, { onDelete: "cascade" }),
 });
 
-const account = pgTable("account", {
+export const account = pgTable("account", {
   id: text("id").primaryKey(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
@@ -54,7 +54,7 @@ const account = pgTable("account", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
-const verification = pgTable("verification", {
+export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
@@ -67,7 +67,7 @@ const verification = pgTable("verification", {
   ),
 });
 
-const videos = pgTable("videos", {
+export const videos = pgTable("videos", {
   id: uuid("id").primaryKey().defaultRandom().unique(),
   title: text("title").notNull(),
   description: text("description").notNull(),
@@ -83,11 +83,3 @@ const videos = pgTable("videos", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
-
-export const schema = {
-  user,
-  session,
-  account,
-  verification,
-  videos,
-};
